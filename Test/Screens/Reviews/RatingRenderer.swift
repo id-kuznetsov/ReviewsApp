@@ -16,9 +16,11 @@ extension RatingRendererConfig {
 
     static func `default`() -> Self {
         let starSize = CGSize(width: 16.0, height: 16.0)
-        let starImage = UIGraphicsImageRenderer(size: starSize).image {
-            UIImage(systemName: "star.fill")?.draw(in: $0.cgContext.boundingBoxOfClipPath)
+        let systemImage = UIImage(systemName: "star.fill")
+        let starImage = UIGraphicsImageRenderer(size: starSize).image { context in
+            (systemImage ?? UIImage()).draw(in: context.cgContext.boundingBoxOfClipPath)
         }
+
         return RatingRendererConfig(
             ratingRange: 1...5,
             starImage: starImage,
@@ -64,8 +66,10 @@ extension RatingRenderer {
     }
 
     func ratingImage(_ rating: Int) -> UIImage {
-        images[rating] ?? drawRatingImageAndCache(rating)
+        let clampedRating = max(config.ratingRange.lowerBound, min(rating, config.ratingRange.upperBound))
+        return images[clampedRating] ?? drawRatingImageAndCache(clampedRating)
     }
+
 
 }
 

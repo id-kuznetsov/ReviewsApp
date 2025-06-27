@@ -9,13 +9,13 @@ final class ReviewsViewModel: NSObject {
     private var state: State
     private let reviewsProvider: ReviewsProvider
     private let ratingRenderer: RatingRenderer
-    private let decoder: JSONDecoder
+    private let decoder: SnakeCaseJSONDecoder
 
     init(
         state: State = State(),
         reviewsProvider: ReviewsProvider = ReviewsProvider(),
         ratingRenderer: RatingRenderer = RatingRenderer(),
-        decoder: JSONDecoder = JSONDecoder()
+        decoder: SnakeCaseJSONDecoder = SnakeCaseJSONDecoder()
     ) {
         self.state = state
         self.reviewsProvider = reviewsProvider
@@ -54,6 +54,16 @@ private extension ReviewsViewModel {
             state.items += newItems
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
+
+            state.items.removeAll(where: { $0 is ReviewCountCellConfig })
+
+            if !state.shouldLoad {
+                let countText = "\(reviews.count) отзывов"
+                    .attributed(font: .reviewCount, color: .reviewCount)
+                let countItem = ReviewCountCellConfig(text: countText)
+                state.items.append(countItem)
+            }
+            
             let added = state.items.count > oldCount
             onStateChange?(state, added)
         } catch {
@@ -83,9 +93,13 @@ private extension ReviewsViewModel {
     typealias ReviewItem = ReviewCellConfig
 
     func makeReviewItem(_ review: Review) -> ReviewItem {
+        let authorFullName = ("\(review.firstName) \(review.lastName)").attributed(font: .username)
+        let ratingImage = ratingRenderer.ratingImage(review.rating)
         let reviewText = review.text.attributed(font: .text)
         let created = review.created.attributed(font: .created, color: .created)
         let item = ReviewItem(
+            authorFullName: authorFullName,
+            ratingImage: ratingImage,
             reviewText: reviewText,
             created: created,
             onTapShowMore: showMoreReview
