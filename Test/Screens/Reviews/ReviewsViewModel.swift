@@ -4,7 +4,7 @@ import UIKit
 final class ReviewsViewModel: NSObject {
 
     /// Замыкание, вызываемое при изменении `state`.
-    var onStateChange: ((State) -> Void)?
+    var onStateChange: ((State, Bool) -> Void)?
 
     private var state: State
     private let reviewsProvider: ReviewsProvider
@@ -45,29 +45,33 @@ extension ReviewsViewModel {
 private extension ReviewsViewModel {
 
     /// Метод обработки получения отзывов.
-    func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {
+    private func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {
         do {
             let data = try result.get()
             let reviews = try decoder.decode(Reviews.self, from: data)
-            state.items += reviews.items.map(makeReviewItem)
+            let oldCount = state.items.count
+            let newItems = reviews.items.map(makeReviewItem)
+            state.items += newItems
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
+            let added = state.items.count > oldCount
+            onStateChange?(state, added)
         } catch {
             state.shouldLoad = true
+            onStateChange?(state, false)
         }
-        onStateChange?(state)
     }
 
     /// Метод, вызываемый при нажатии на кнопку "Показать полностью...".
     /// Снимает ограничение на количество строк текста отзыва (раскрывает текст).
     func showMoreReview(with id: UUID) {
         guard
-            let index = state.items.firstIndex(where: { ($0 as? ReviewItem)?.id == id }),
-            var item = state.items[index] as? ReviewItem
+            let index = state.items.firstIndex(where: { ($0 as? ReviewCellConfig)?.id == id }),
+            var item = state.items[index] as? ReviewCellConfig
         else { return }
         item.maxLines = .zero
         state.items[index] = item
-        onStateChange?(state)
+        onStateChange?(state, false)
     }
 
 }
@@ -139,4 +143,14 @@ extension ReviewsViewModel: UITableViewDelegate {
         return remainingDistance <= triggerDistance
     }
 
+}
+
+// MARK: - Refresh
+
+extension ReviewsViewModel {
+    func refresh() {
+        state = State()
+        onStateChange?(state, false) 
+        getReviews()
+    }
 }
