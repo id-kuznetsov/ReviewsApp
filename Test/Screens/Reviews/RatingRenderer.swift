@@ -69,8 +69,6 @@ extension RatingRenderer {
         let clampedRating = max(config.ratingRange.lowerBound, min(rating, config.ratingRange.upperBound))
         return images[clampedRating] ?? drawRatingImageAndCache(clampedRating)
     }
-
-
 }
 
 // MARK: - Private

@@ -152,7 +152,6 @@ private extension ReviewCell {
     func setupAvatarView() {
         contentView.addSubview(avatarView)
         avatarView.contentMode = .scaleAspectFit
-        avatarView.image = UIImage(named: "EmptyAvatar") // TODO: for test
         avatarView.layer.masksToBounds = true
         avatarView.layer.cornerRadius = Layout.avatarCornerRadius
     }
