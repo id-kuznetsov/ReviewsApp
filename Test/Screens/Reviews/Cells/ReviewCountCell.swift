@@ -5,14 +5,14 @@ import UIKit
 struct ReviewCountCellConfig {
     static let reuseId = String(describing: ReviewCountCellConfig.self)
     
-    let text: NSAttributedString
+    let reviewCountText: NSAttributedString
     fileprivate let layout = ReviewCountCellLayout()
 }
 
 extension ReviewCountCellConfig: TableCellConfig {
     func update(cell: UITableViewCell) {
         guard let cell = cell as? ReviewCountCell else { return }
-        cell.countLabel.attributedText = text
+        cell.countLabel.attributedText = reviewCountText
         cell.config = self
     }
     
@@ -70,7 +70,7 @@ private final class ReviewCountCellLayout {
     
     func height(config: ReviewCountCellConfig, maxWidth: CGFloat) -> CGFloat {
         let labelWidth = maxWidth - 2 * horizontalInset
-        let textHeight = config.text.boundingRect(width: labelWidth).height
+        let textHeight = config.reviewCountText.boundingRect(width: labelWidth).height
         return textHeight + 2 * verticalInset
     }
 }

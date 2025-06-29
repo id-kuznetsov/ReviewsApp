@@ -499,7 +499,7 @@
 				21B82E102D4792310085DAA2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		21B82E0C2D4792310085DAA2 /* Build configuration list for PBXNativeTarget "Test" */ = {
 			isa = XCConfigurationList;
@@ -508,7 +508,7 @@
 				21B82E0E2D4792310085DAA2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

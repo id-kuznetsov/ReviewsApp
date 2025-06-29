@@ -60,7 +60,7 @@ private extension ReviewsViewModel {
             if !state.shouldLoad {
                 let countText = "\(reviews.count) отзывов"
                     .attributed(font: .reviewCount, color: .reviewCount)
-                let countItem = ReviewCountCellConfig(text: countText)
+                let countItem = ReviewCountCellConfig(reviewCountText: countText)
                 state.items.append(countItem)
             }
             
@@ -102,7 +102,9 @@ private extension ReviewsViewModel {
             ratingImage: ratingImage,
             reviewText: reviewText,
             created: created,
-            onTapShowMore: showMoreReview
+            onTapShowMore: { [weak self] id in
+                self?.showMoreReview(with: id)
+            }
         )
         return item
     }
