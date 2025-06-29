@@ -42,6 +42,9 @@ extension ReviewsViewModel {
     func getReviews() {
         guard state.shouldLoad else { return }
         state.shouldLoad = false
+        if state.isFirstLoading {
+            onStateChange?(state, false)
+        }
         reviewsProvider.getReviews(offset: state.offset, completion: gotReviews)
     }
 
@@ -72,6 +75,9 @@ private extension ReviewsViewModel {
             }
             
             let added = state.items.count > oldCount
+            if state.isFirstLoading {
+                state.isFirstLoading = false
+            }
             onStateChange?(state, added)
         } catch {
             state.shouldLoad = true
@@ -138,6 +144,9 @@ extension ReviewsViewModel: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard state.items.indices.contains(indexPath.row) else {
+            return UITableViewCell()
+        }
         let config = state.items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: config.reuseId, for: indexPath)
         config.update(cell: cell)
@@ -151,7 +160,10 @@ extension ReviewsViewModel: UITableViewDataSource {
 extension ReviewsViewModel: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        state.items[indexPath.row].height(with: tableView.bounds.size)
+        guard state.items.indices.contains(indexPath.row) else {
+            return UITableView.automaticDimension
+        }
+        return state.items[indexPath.row].height(with: tableView.bounds.size)
     }
 
     /// Метод дозапрашивает отзывы, если до конца списка отзывов осталось два с половиной экрана по высоте.
@@ -184,7 +196,8 @@ extension ReviewsViewModel: UITableViewDelegate {
 extension ReviewsViewModel {
     func refresh() {
         state = State()
-        onStateChange?(state, false) 
+        state.isFirstLoading = false
+        onStateChange?(state, false)
         getReviews()
     }
 }
