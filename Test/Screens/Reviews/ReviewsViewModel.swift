@@ -100,6 +100,7 @@ private extension ReviewsViewModel {
         let item = ReviewItem(
             authorFullName: authorFullName,
             ratingImage: ratingImage,
+            photoURLs: [URL(string: "IMG_0001")!, URL(string: "IMG_0002")!, URL(string: "IMG_0003")!, URL(string: "IMG_0004")!], // TODO: for mock tests 
             reviewText: reviewText,
             created: created,
             onTapShowMore: { [weak self] id in
