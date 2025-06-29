@@ -10,17 +10,24 @@ final class ReviewsViewModel: NSObject {
     private let reviewsProvider: ReviewsProvider
     private let ratingRenderer: RatingRenderer
     private let decoder: SnakeCaseJSONDecoder
+    private let imageProvider: ImageProviderProtocol
 
     init(
         state: State = State(),
         reviewsProvider: ReviewsProvider = ReviewsProvider(),
         ratingRenderer: RatingRenderer = RatingRenderer(),
-        decoder: SnakeCaseJSONDecoder = SnakeCaseJSONDecoder()
+        decoder: SnakeCaseJSONDecoder = SnakeCaseJSONDecoder(),
+        imageProvider: ImageProviderProtocol = ImageProvider()
     ) {
         self.state = state
         self.reviewsProvider = reviewsProvider
         self.ratingRenderer = ratingRenderer
         self.decoder = decoder
+        self.imageProvider = imageProvider
+    }
+    
+    func getImageProvider() -> ImageProviderProtocol {
+        imageProvider
     }
 
 }
@@ -94,18 +101,28 @@ private extension ReviewsViewModel {
 
     func makeReviewItem(_ review: Review) -> ReviewItem {
         let authorFullName = ("\(review.firstName) \(review.lastName)").attributed(font: .username)
+        let avatarURL: URL? = {
+            if let avatarString = review.avatarUrl,
+               let url = URL(string: avatarString) {
+                return url
+            }
+            return Bundle.main.url(forResource: "EmptyAvatar", withExtension: "jpg")
+        }()
         let ratingImage = ratingRenderer.ratingImage(review.rating)
+        let photoURLs: [URL] = (review.photos ?? []).compactMap { URL(string: $0) }
         let reviewText = review.text.attributed(font: .text)
         let created = review.created.attributed(font: .created, color: .created)
         let item = ReviewItem(
             authorFullName: authorFullName,
+            avatarURL: avatarURL,
             ratingImage: ratingImage,
-            photoURLs: [URL(string: "IMG_0001")!, URL(string: "IMG_0002")!, URL(string: "IMG_0003")!, URL(string: "IMG_0004")!], // TODO: for mock tests 
+            photoURLs: photoURLs,
             reviewText: reviewText,
             created: created,
             onTapShowMore: { [weak self] id in
                 self?.showMoreReview(with: id)
-            }
+            },
+            imageProvider: imageProvider
         )
         return item
     }

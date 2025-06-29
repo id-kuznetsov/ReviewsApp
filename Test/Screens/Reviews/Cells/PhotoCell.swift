@@ -30,9 +30,12 @@ final class PhotoCell: UICollectionViewCell {
         imageView.frame = contentView.bounds
     }
     
-    func configure(with url: URL) {
-        // TODO: imageProvider
-        imageView.image = UIImage(named: "IMG_0001")
+    func configure(with url: URL, imageProvider: ImageProviderProtocol) {
+        imageProvider.loadImage(from: url) { [weak self] image in
+            DispatchQueue.main.async {
+                self?.imageView.image = image
+            }
+        }
     }
 }
 

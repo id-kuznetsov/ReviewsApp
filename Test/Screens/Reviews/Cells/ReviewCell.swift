@@ -10,6 +10,8 @@ struct ReviewCellConfig {
     let id = UUID()
     /// Полное имя.
     let authorFullName: NSAttributedString
+    /// Аватар
+    let avatarURL: URL?
     /// Рейтинг.
     let ratingImage: UIImage
     /// Изображения в отзывах
@@ -23,6 +25,9 @@ struct ReviewCellConfig {
     /// Замыкание, вызываемое при нажатии на кнопку "Показать полностью...".
     let onTapShowMore: (UUID) -> Void
 
+    /// Провайдер изображений (для асинхронной загрузки и кэширования)
+    let imageProvider: ImageProviderProtocol
+
     /// Объект, хранящий посчитанные фреймы для ячейки отзыва.
     fileprivate let layout = ReviewCellLayout()
 
@@ -31,18 +36,12 @@ struct ReviewCellConfig {
 // MARK: - TableCellConfig
 
 extension ReviewCellConfig: TableCellConfig {
-
+    
     /// Метод обновления ячейки.
     /// Вызывается из `cellForRowAt:` у `dataSource` таблицы.
     func update(cell: UITableViewCell) {
         guard let cell = cell as? ReviewCell else { return }
-        cell.authorNameLabel.attributedText = authorFullName
-        cell.ratingView.image = ratingImage
-        cell.reviewTextLabel.attributedText = reviewText
-        cell.reviewTextLabel.numberOfLines = maxLines
-        cell.createdLabel.attributedText = created
-        cell.setPhotos(photoURLs)
-        cell.config = self
+        cell.update(with: self)
     }
 
     /// Метод, возвращаюший высоту ячейки с данным ограничением по размеру.
@@ -76,7 +75,8 @@ final class ReviewCell: UITableViewCell {
     fileprivate let createdLabel = UILabel()
     fileprivate let showMoreButton = UIButton()
     private let photosCollectionView = ReviewPhotosCollectionView()
-    private var photos: [URL] = []
+    
+    private var imageProvider: ImageProviderProtocol?
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -93,10 +93,30 @@ final class ReviewCell: UITableViewCell {
         authorNameLabel.attributedText = nil
         reviewTextLabel.attributedText = nil
         createdLabel.attributedText = nil
+        avatarView.image = UIImage(named: "EmptyAvatar")
+        imageProvider = nil
     }
 
     func setPhotos(_ urls: [URL]?) {
-        photosCollectionView.setPhotos(urls)
+        photosCollectionView.setPhotos(urls ?? [], imageProvider: imageProvider)
+    }
+    
+    func update(with config: ReviewCellConfig) {
+        self.config = config
+        self.imageProvider = config.imageProvider
+        
+        authorNameLabel.attributedText = config.authorFullName
+        ratingView.image = config.ratingImage
+        reviewTextLabel.attributedText = config.reviewText
+        reviewTextLabel.numberOfLines = config.maxLines
+        createdLabel.attributedText = config.created
+        setPhotos(config.photoURLs)
+        
+        if let avatarURL = config.avatarURL {
+            avatarView.setImage(from: avatarURL, placeholder: UIImage(named: "EmptyAvatar"), using: config.imageProvider)
+        } else {
+            avatarView.image = UIImage(named: "EmptyAvatar")
+        }
     }
     
     override func layoutSubviews() {

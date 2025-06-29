@@ -29,6 +29,8 @@
 		21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */; };
 		5C2D27422E11CC0200E0CA7A /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D27412E11CC0200E0CA7A /* PhotoCell.swift */; };
 		5C2D27442E11D2C700E0CA7A /* ReviewPhotosCollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D27432E11D2C700E0CA7A /* ReviewPhotosCollectionViewDelegate.swift */; };
+		5C2D27472E11F26100E0CA7A /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D27462E11F26100E0CA7A /* ImageProvider.swift */; };
+		5C2D274B2E11F6C600E0CA7A /* UIImageVIew+setImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D274A2E11F6C600E0CA7A /* UIImageVIew+setImage.swift */; };
 		5CCF5C312E0F26DF00A8E78D /* SnakeCaseJSONDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCF5C302E0F26DF00A8E78D /* SnakeCaseJSONDecoder.swift */; };
 		5CCF5C332E0F458400A8E78D /* ReviewCountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCF5C322E0F458400A8E78D /* ReviewCountCell.swift */; };
 /* End PBXBuildFile section */
@@ -57,6 +59,8 @@
 		21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsScreenFactory.swift; sourceTree = "<group>"; };
 		5C2D27412E11CC0200E0CA7A /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		5C2D27432E11D2C700E0CA7A /* ReviewPhotosCollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPhotosCollectionViewDelegate.swift; sourceTree = "<group>"; };
+		5C2D27462E11F26100E0CA7A /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
+		5C2D274A2E11F6C600E0CA7A /* UIImageVIew+setImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageVIew+setImage.swift"; sourceTree = "<group>"; };
 		5CCF5C302E0F26DF00A8E78D /* SnakeCaseJSONDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeCaseJSONDecoder.swift; sourceTree = "<group>"; };
 		5CCF5C322E0F458400A8E78D /* ReviewCountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCountCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				21B8416E2D47C4C60085DAA2 /* String+Ext.swift */,
+				5C2D274A2E11F6C600E0CA7A /* UIImageVIew+setImage.swift */,
 				216668702D48E4B2009AAA76 /* NSAttributedString+Ext.swift */,
 			);
 			path = Extensions;
@@ -154,6 +159,7 @@
 				216668742D48EA59009AAA76 /* Constants */,
 				21B82E222D47B0640085DAA2 /* Extensions */,
 				21B82E242D47B0640085DAA2 /* Resources */,
+				5C2D27452E11F24100E0CA7A /* Services */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -197,6 +203,14 @@
 				21ED1F612D69CBCD0012D6F6 /* RootView.swift */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		5C2D27452E11F24100E0CA7A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5C2D27462E11F26100E0CA7A /* ImageProvider.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		5CCF5C2F2E0F26CF00A8E78D /* Helpers */ = {
@@ -293,11 +307,13 @@
 				21B82E362D47B0D80085DAA2 /* ReviewsProvider.swift in Sources */,
 				21ED1F602D69C85E0012D6F6 /* RootViewController.swift in Sources */,
 				21B82E342D47B0AA0085DAA2 /* ReviewsViewModel.swift in Sources */,
+				5C2D27472E11F26100E0CA7A /* ImageProvider.swift in Sources */,
 				21B8416B2D47BFA10085DAA2 /* Reviews.swift in Sources */,
 				21B82E302D47B0640085DAA2 /* ReviewsViewController.swift in Sources */,
 				2166A0F42D4A5B25009AAA76 /* ReviewsView.swift in Sources */,
 				216668732D48E89A009AAA76 /* Colors.swift in Sources */,
 				21B841712D47C5F00085DAA2 /* TableCellConfig.swift in Sources */,
+				5C2D274B2E11F6C600E0CA7A /* UIImageVIew+setImage.swift in Sources */,
 				21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */,
 				2166686F2D48E23F009AAA76 /* Fonts.swift in Sources */,
 				21B82E312D47B0640085DAA2 /* AppDelegate.swift in Sources */,

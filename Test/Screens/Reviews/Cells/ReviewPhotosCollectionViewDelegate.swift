@@ -3,6 +3,7 @@ import UIKit
 final class ReviewPhotosCollectionView: UIView {
     
     private var photoURLs: [URL] = []
+    private var imageProvider: ImageProviderProtocol?
     
     private lazy var collectionView: UICollectionView = {
         let flow = UICollectionViewFlowLayout()
@@ -26,9 +27,10 @@ final class ReviewPhotosCollectionView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
-    func setPhotos(_ urls: [URL]?) {
-        photoURLs = urls ?? []
-        collectionView.isHidden = photoURLs.isEmpty
+    func setPhotos(_ urls: [URL]?, imageProvider: ImageProviderProtocol?) {
+        self.photoURLs = urls ?? []
+        self.imageProvider = imageProvider
+        collectionView.isHidden = self.photoURLs.isEmpty
         collectionView.reloadData()
     }
 
@@ -44,12 +46,12 @@ extension ReviewPhotosCollectionView: UICollectionViewDataSource, UICollectionVi
     }
     func collectionView(_ cv: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = cv.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseId, for: indexPath) as! PhotoCell
-        cell.configure(with: photoURLs[indexPath.item])
+        if let imageProvider {
+            cell.configure(with: photoURLs[indexPath.item], imageProvider: imageProvider) 
+        }
         return cell
     }
 }
-
-// MARK: — Layout helper for spacing & size
 
 private extension ReviewPhotosCollectionView {
     struct Layout {

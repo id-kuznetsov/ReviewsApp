@@ -5,10 +5,12 @@ struct Review: Decodable {
     let firstName: String
     /// Фамилия
     let lastName: String
-    /// avatar
-    let avatarURL: String?
-    /// rating
+    /// Аватар
+    let avatarUrl: String?
+    /// Рейтинг
     let rating: Int
+    /// Фото в отзыве
+    let photos: [String]?
     /// Текст отзыва.
     let text: String
     /// Время создания отзыва.
